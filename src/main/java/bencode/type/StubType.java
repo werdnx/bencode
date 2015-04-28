@@ -21,7 +21,7 @@ public enum StubType implements BType<Void> {
     }
 
     @Override
-    public char[] encode() {
+    public String encode() {
         throw new UnsupportedOperationException("Type is None");
     }
 }

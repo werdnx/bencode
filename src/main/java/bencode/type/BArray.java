@@ -6,6 +6,8 @@ import bencode.util.BEncodeUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * Created by Dmitrenko on 28.04.2015.
@@ -24,17 +26,17 @@ public class BArray extends CommonBType<ArrayList<BType<?>>> {
         decodePreconditions();
         value = new ArrayList<>();
         BType<?> bType;
-        while (!(bType = p.parseNext(is)).equals(ServiceType.END)) {
+        while (!(bType = p.parseNext(is)).equals(StubType.END)) {
             value.add(bType);
         }
     }
 
     @Override
-    public char[] encode() {
+    public String encode() {
         encodePreconditions();
-        return (BEncodeUtils.ARRAY + "" +
-                value.stream().map(bType -> bType.encode()).toString().toCharArray() +
-                BEncodeUtils.END)
-                .toCharArray();
+        return new StringBuilder().append(BEncodeUtils.ARRAY)
+                .append(value.stream().map(bType -> bType.encode()).reduce((a, b) -> a + b).get())
+                .append(BEncodeUtils.END)
+                .toString();
     }
 }

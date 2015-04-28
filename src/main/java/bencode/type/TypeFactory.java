@@ -6,6 +6,8 @@ import javafx.util.Pair;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -39,12 +41,14 @@ public class TypeFactory {
     }
 
     public static BInt bInt(Integer i) {
+        notNulCheck(i);
         BInt bInt = new BInt();
         bInt.setValue(i);
         return bInt;
     }
 
     public static BString bString(String s) {
+        notNulCheck(s);
         BString bString = new BString();
         bString.setLength(s.length());
         bString.setValue(s);
@@ -52,6 +56,7 @@ public class TypeFactory {
     }
 
     public static BArray bArray(BType<?>... values) {
+        notNulCheck(values);
         BArray bArray = new BArray();
         ArrayList<BType<?>> list = new ArrayList<>(values.length);
         for (BType<?> value : values) {
@@ -62,11 +67,26 @@ public class TypeFactory {
     }
 
     public static BDictionary bDictionary(Pair<BString, BType<?>>... pairs) {
+        notNulCheck(pairs);
         BDictionary bDictionary = new BDictionary();
         List<Pair<BString, BType<?>>> value = new ArrayList<>();
         for (Pair<BString, BType<?>> pair : pairs) {
+            notNulCheck(pair.getKey());
+            notNulCheck(pair.getValue());
             value.add(pair);
         }
+        /**
+         * According spec we should keep data in lexicographical order by keys
+         */
+        Collections.sort(value, (o1, o2) -> o1.getKey().value().compareTo(o2.getKey().value()));
+        bDictionary.setValue(value);
         return bDictionary;
     }
+
+    private static void notNulCheck(Object o) {
+        if (o == null) {
+            throw new IllegalStateException("Parameter cannot be null");
+        }
+    }
+
 }

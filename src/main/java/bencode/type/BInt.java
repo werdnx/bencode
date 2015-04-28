@@ -26,8 +26,10 @@ public class BInt extends CommonBType<Integer> {
     }
 
     @Override
-    public char[] encode() {
+    public String encode() {
         encodePreconditions();
-        return (BEncodeUtils.INT + value + BEncodeUtils.END + "").toCharArray();
+        return new StringBuilder().append(BEncodeUtils.INT)
+                .append(value)
+                .append(BEncodeUtils.END).toString();
     }
 }

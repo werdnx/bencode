@@ -13,5 +13,5 @@ public interface BType<Value> {
 
     void decode(Parser p, InputStream is) throws IOException;
 
-    char[] encode();
+    String encode();
 }

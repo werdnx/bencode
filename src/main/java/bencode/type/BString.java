@@ -38,9 +38,11 @@ public class BString extends CommonBType<String> {
     }
 
     @Override
-    public char[] encode() {
+    public String encode() {
         encodePreconditions();
-        return (value.length() + BEncodeUtils.STRING_SPLITTER + value).toCharArray();
+        return new StringBuilder().append(value.length())
+                .append(BEncodeUtils.STRING_SPLITTER)
+                .append(value).toString();
     }
 
     public int getLength() {

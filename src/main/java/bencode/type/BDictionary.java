@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Created by Dmitrenko on 28.04.2015.
@@ -42,11 +43,11 @@ public class BDictionary extends CommonBType<List<Pair<BString, BType<?>>>> {
     }
 
     @Override
-    public char[] encode() {
+    public String encode() {
         encodePreconditions();
-        return (BEncodeUtils.DICTIONARY + "" +
-                value.stream().map(pair -> "" + pair.getKey().encode() + pair.getValue().encode()).toString().toCharArray()
-                + BEncodeUtils.END + "")
-                .toCharArray();
+        Stream<String> map = value.stream().map(pair -> pair.getKey().encode() + pair.getValue().encode());
+        return new StringBuilder().append(BEncodeUtils.DICTIONARY)
+                .append(value.stream().map(pair -> pair.getKey().encode() + pair.getValue().encode()).reduce((a, b) -> a + b).get())
+                .append(BEncodeUtils.END).toString();
     }
 }
