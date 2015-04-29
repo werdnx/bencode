@@ -8,6 +8,7 @@ import java.io.InputStream;
 
 /**
  * Created by Dmitrenko on 28.04.2015.
+ * Integer abstraction
  */
 public class BInt extends CommonBType<Integer> {
 
@@ -28,8 +29,11 @@ public class BInt extends CommonBType<Integer> {
     @Override
     public String encode() {
         encodePreconditions();
-        return new StringBuilder().append(BEncodeUtils.INT)
-                .append(value)
-                .append(BEncodeUtils.END).toString();
+        return String.valueOf(BEncodeUtils.INT) + value + BEncodeUtils.END;
+    }
+
+    @Override
+    public String toString() {
+        return value.toString();
     }
 }

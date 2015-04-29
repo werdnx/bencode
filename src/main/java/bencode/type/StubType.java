@@ -6,8 +6,12 @@ import java.io.InputStream;
 
 /**
  * Created by Dmitrenko on 28.04.2015.
+ * Special stub types for parsing logic
  */
 public enum StubType implements BType<Void> {
+    /**
+     * end marker
+     */
     END;
 
     @Override
@@ -17,7 +21,6 @@ public enum StubType implements BType<Void> {
 
     @Override
     public void decode(Parser p, InputStream is) {
-        return;
     }
 
     @Override

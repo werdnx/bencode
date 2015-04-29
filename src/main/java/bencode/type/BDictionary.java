@@ -12,6 +12,7 @@ import java.util.stream.Stream;
 
 /**
  * Created by Dmitrenko on 28.04.2015.
+ * Dictionary abstraction
  */
 public class BDictionary extends CommonBType<List<Pair<BString, BType<?>>>> {
     BDictionary() {
@@ -36,18 +37,30 @@ public class BDictionary extends CommonBType<List<Pair<BString, BType<?>>>> {
             } else if (bValue.equals(StubType.END)) {
                 throw new IllegalStateException("Wrong dictionary format, value expected, left bytes " + is.available());
             } else {
-                Pair pair = new Pair(bKey, bValue);
+                Pair<BString,BType<?>> pair = new Pair(bKey, bValue);
                 value.add(pair);
             }
         }
     }
 
+
     @Override
     public String encode() {
         encodePreconditions();
         Stream<String> map = value.stream().map(pair -> pair.getKey().encode() + pair.getValue().encode());
-        return new StringBuilder().append(BEncodeUtils.DICTIONARY)
-                .append(value.stream().map(pair -> pair.getKey().encode() + pair.getValue().encode()).reduce((a, b) -> a + b).get())
-                .append(BEncodeUtils.END).toString();
+        return String.valueOf(BEncodeUtils.DICTIONARY) + value.stream().map(pair -> pair.getKey().encode() + pair.getValue().encode()).reduce((a, b) -> a + b).get() + BEncodeUtils.END;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{ ");
+        for (Pair<BString, BType<?>> pair : value()) {
+            sb.append(pair.getKey().toString()).append(" -> ")
+                    .append(pair.getValue().toString()).append(",\r\n");
+        }
+        sb.delete(sb.length() - 3, sb.length());
+        sb.append("}");
+        return sb.toString();
     }
 }

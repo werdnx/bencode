@@ -6,11 +6,10 @@ import bencode.util.BEncodeUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 /**
  * Created by Dmitrenko on 28.04.2015.
+ * Array abstraction
  */
 public class BArray extends CommonBType<ArrayList<BType<?>>> {
     BArray() {
@@ -34,9 +33,18 @@ public class BArray extends CommonBType<ArrayList<BType<?>>> {
     @Override
     public String encode() {
         encodePreconditions();
-        return new StringBuilder().append(BEncodeUtils.ARRAY)
-                .append(value.stream().map(bType -> bType.encode()).reduce((a, b) -> a + b).get())
-                .append(BEncodeUtils.END)
-                .toString();
+        return String.valueOf(BEncodeUtils.ARRAY) + value.stream().map(bType -> bType.encode()).reduce((a, b) -> a + b).get() + BEncodeUtils.END;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[ ");
+        for (BType<?> bType : value) {
+            sb.append(bType.toString()).append(", ");
+        }
+        sb.delete(sb.length() - 2, sb.length());
+        sb.append(" ]");
+        return sb.toString();
     }
 }

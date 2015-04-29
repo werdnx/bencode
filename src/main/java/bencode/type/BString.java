@@ -8,6 +8,7 @@ import java.io.InputStream;
 
 /**
  * Created by Dmitrenko on 28.04.2015.
+ * String abstraction
  */
 public class BString extends CommonBType<String> {
 
@@ -40,9 +41,7 @@ public class BString extends CommonBType<String> {
     @Override
     public String encode() {
         encodePreconditions();
-        return new StringBuilder().append(value.length())
-                .append(BEncodeUtils.STRING_SPLITTER)
-                .append(value).toString();
+        return String.valueOf(value.length()) + BEncodeUtils.STRING_SPLITTER + value;
     }
 
     public int getLength() {
@@ -51,5 +50,10 @@ public class BString extends CommonBType<String> {
 
     public void setLength(int length) {
         this.length = length;
+    }
+
+    @Override
+    public String toString() {
+        return value;
     }
 }

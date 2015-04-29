@@ -1,7 +1,7 @@
 package bencode.parser;
 
 import bencode.type.BType;
-import bencode.type.ServiceType;
+import bencode.type.StubType;
 import bencode.type.TypeFactory;
 
 import java.io.IOException;
@@ -11,6 +11,7 @@ import java.util.List;
 
 /**
  * Created by Dmitrenko on 28.04.2015.
+ * Parser
  */
 public class StreamParser implements Parser<InputStream> {
     @Override
@@ -24,7 +25,7 @@ public class StreamParser implements Parser<InputStream> {
     public List<BType<?>> parse(InputStream is) throws IOException {
         BType<?> bType;
         List<BType<?>> result = new LinkedList<>();
-        while (!(bType = parseNext(is)).equals(ServiceType.END)) {
+        while (!(bType = parseNext(is)).equals(StubType.END)) {
             result.add(bType);
         }
         return result;

@@ -7,11 +7,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
  * Created by Dmitrenko on 28.04.2015.
+ * Class for creating all types to work with bencode object model
  */
 public class TypeFactory {
     public static BType<?> createType(InputStream is) throws IOException {
@@ -28,7 +28,7 @@ public class TypeFactory {
             return bString;
         } else if (c == BEncodeUtils.END) {
             return StubType.END;
-        } else if ((int) c == -1) {
+        } else if ((byte) c == -1) {
             return StubType.END;
         } else {
             throw new IllegalStateException("Unknown b type " + c + " left bytes " + is.available());
@@ -59,13 +59,12 @@ public class TypeFactory {
         notNulCheck(values);
         BArray bArray = new BArray();
         ArrayList<BType<?>> list = new ArrayList<>(values.length);
-        for (BType<?> value : values) {
-            list.add(value);
-        }
+        Collections.addAll(list, values);
         bArray.setValue(list);
         return bArray;
     }
 
+    @SafeVarargs
     public static BDictionary bDictionary(Pair<BString, BType<?>>... pairs) {
         notNulCheck(pairs);
         BDictionary bDictionary = new BDictionary();
